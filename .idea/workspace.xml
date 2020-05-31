@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="af12038f-0be3-4782-b1fe-73c5384bf9ad" name="Default Changelist" comment="" />
+    <list default="true" id="af12038f-0be3-4782-b1fe-73c5384bf9ad" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/../.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../.idea/vcs.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitmodules" beforeDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -13,6 +16,7 @@
   <component name="GithubPullRequestsUISettings">
     <option name="hiddenUrls">
       <set>
+        <option value="https://github.com/MaeZhao/McMahonLabs-Mae-Zhao-Notebook.git" />
         <option value="https://github.com/uqfoundation/dill.git" />
       </set>
     </option>
@@ -41,6 +45,7 @@
       <updated>1590890938938</updated>
       <workItem from="1590890941569" duration="610000" />
       <workItem from="1590891566250" duration="40000" />
+      <workItem from="1590891623668" duration="335000" />
     </task>
     <servers />
   </component>
