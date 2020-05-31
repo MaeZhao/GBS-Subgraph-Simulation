@@ -1,3 +1,6 @@
-[submodule "multiprocess"]
+[submodule "repo_refs/multiprocess"]
 	path = repo_refs/multiprocess
 	url = https://github.com/uqfoundation/multiprocess.git
+[submodule "repo_refs/dill"]
+	path = repo_refs/dill
+	url = https://github.com/uqfoundation/dill.git
