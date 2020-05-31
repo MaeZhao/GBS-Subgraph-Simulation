@@ -1,11 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="BranchesTreeState">
+    <expand>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="LOCAL_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="GROUP_NODE:origin" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+    </expand>
+    <select />
+  </component>
   <component name="ChangeListManager">
-    <list default="true" id="af12038f-0be3-4782-b1fe-73c5384bf9ad" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/../.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../.idea/vcs.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/project" beforeDir="false" />
-    </list>
+    <list default="true" id="af12038f-0be3-4782-b1fe-73c5384bf9ad" name="Default Changelist" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -49,21 +63,65 @@
       <workItem from="1590891566250" duration="40000" />
       <workItem from="1590891623668" duration="451000" />
       <workItem from="1590892110442" duration="72000" />
+      <workItem from="1590892198883" duration="186000" />
     </task>
+    <task id="LOCAL-00001" summary="h">
+      <created>1590892361239</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1590892361239</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="2" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State>
+              <option name="FILTERS">
+                <map>
+                  <entry key="branch">
+                    <value>
+                      <list>
+                        <option value="origin/master" />
+                      </list>
+                    </value>
+                  </entry>
+                </map>
+              </option>
+            </State>
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <ignored-roots>
+      <path value="$PROJECT_DIR$/project" />
+      <path value="$PROJECT_DIR$/repo_refs/dill" />
+    </ignored-roots>
+    <MESSAGE value="h" />
+    <option name="LAST_COMMIT_MESSAGE" value="h" />
   </component>
   <component name="WindowStateProjectService">
     <state x="1807" y="590" key="#Notifications" timestamp="1590890973172">
       <screen x="0" y="0" width="2560" height="1400" />
     </state>
     <state x="1807" y="590" key="#Notifications/0.0.2560.1400@0.0.2560.1400" timestamp="1590890973172" />
-    <state x="1421" y="348" key="SettingsEditor" timestamp="1590892121860">
+    <state x="1453" y="181" key="CommitChangelistDialog2" timestamp="1590892360774">
       <screen x="0" y="0" width="2560" height="1400" />
     </state>
-    <state x="1421" y="348" key="SettingsEditor/0.0.2560.1400@0.0.2560.1400" timestamp="1590892121860" />
+    <state x="1453" y="181" key="CommitChangelistDialog2/0.0.2560.1400@0.0.2560.1400" timestamp="1590892360774" />
+    <state x="1421" y="348" key="SettingsEditor" timestamp="1590892384305">
+      <screen x="0" y="0" width="2560" height="1400" />
+    </state>
+    <state x="1421" y="348" key="SettingsEditor/0.0.2560.1400@0.0.2560.1400" timestamp="1590892384305" />
     <state x="1628" y="442" width="583" height="624" key="find.popup" timestamp="1590891593721">
       <screen x="0" y="0" width="2560" height="1400" />
     </state>
