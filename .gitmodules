@@ -1,0 +1,3 @@
+[submodule "multiprocess"]
+	path = repo_refs/multiprocess
+	url = https://github.com/uqfoundation/multiprocess.git
