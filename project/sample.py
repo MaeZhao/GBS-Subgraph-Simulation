@@ -3,213 +3,144 @@
 
 import pickle
 import time
+import warnings
 import _thread as Thread
-import threading
-import queue as q
+from multiprocessing import Queue, Process, Pool
+import random
+import functools
+import operator
+from strawberryfields.apps import data, sample, subgraph, plot
 
 # from multiprocessing_on_dill.queues import Queue
 # from multiprocessing_on_dill.pool import Pool
 # from multiprocessing_on_dill.managers import Value
 # from multiprocessing_on_dill.context import BaseContext
-
 import dill
 import networkx as nx
 import numpy as np
 import multiprocess as mp
-from multiprocess import Process, Queue, Pool, Value
-
+import threading as threading
 from networkx.readwrite.nx_yaml import read_yaml
 from strawberryfields.apps import sample
 
-adj = nx.to_numpy_array(read_yaml('union_graph.yaml'))
-threads = []
-graph = nx.Graph(adj)
 
-
-def make_sample(f_adj, max_samp, queue):
-	start_sampling.wait()
-	ts = time.time()
-	sampling = sample.sample(f_adj, 8, max_samp)
-	start_sampling.set()
-	tsf = time.time()
-	total_n = ts - tsf
-	ret = (total_n, sampling)
-	queue.put(ret)
-	# time.sleep(0.01)  # kills the thread above
-	return ret
-
-
-def classic_gen_time_Sample1(max_samp, queue):
-	def thread_samples(adj, mSamp):
-		if (mSamp <= 1):
-			lst = []
-			temp_que = Queue()
-			# Use thread to speed up processing (multithreading)
-			temp_thread = threading.Thread(None, target=make_sample,
-			                               name=("1: " + str(mSamp)),
-			                               args=[adj, mSamp, temp_que],
-			                               daemon=True, )
-			# temp_thread = threading.Thread(None, target=make_sample,  name=("2:" +
-			#                                                                 str(
-			# 	                                                                max_Sample)),
-			#                                args=[adj, max_Sample, queue], )
-			temp_thread.start()
-			temp_thread.join()
-			time_samp_node = temp_que.get()  # the resulting (samples,thread_time)
-			temp_que.task_done()
-			lst.append(time_samp_node)
-			return (lst, True)
-		else:
-			rec_val = thread_samples(adj, mSamp - 1)
-			temp_que = Queue()
-			# Use thread to speed up processing (multithreading)
-			temp_thread = threading.Thread(None, target=make_sample,
-			                               name=("1: " + str(mSamp)),
-			                               args=[adj, mSamp, temp_que],
-			                               daemon=True, )
-			# temp_thread = threading.Thread(None, target=make_sample,  name=("2:" +
-			#                                                                 str(
-			# 	                                                                max_Sample)),
-			#                                args=[adj, max_Sample, queue], )
-			temp_thread.start()
-			temp_thread.join()
-			time_samp_node = temp_que.get()  # the resulting (samples,thread_time)
-			temp_que.task_done()
-			# s = queue.get()
-			# Use thread to speed up processing (multithreading)
-			if (rec_val[1]):
-				rec_lst = rec_val[0]
-				rec_lst.append(time_samp_node)
-				ret = (rec_lst, True)
-				# Return the begining of a (time x sample) x boolean tuple list
-				return ret
-	
-	res = thread_samples(adj, max_samp)
-	ret = res[0]
-	queue.put(ret)
-	return ret
-
-
-# theoretically this is supposed to be slower
-def classic_gen_time_Sample2(max_Samp, sample_time_lst, queue):
-	if max_Samp <= 0:
-		queue.put(sample_time_lst)
-		return sample_time_lst
-	else:
-		temp_que = Queue()
-		# Use thread to speed up processing (multithreading)
-		temp_thread = threading.Thread(None, target=make_sample,
-		                               name=("2: " + str(max_Samp)),
-		                               args=[adj, max_Samp, temp_que],
-		                               daemon=True, )
-		
-		temp_thread.start()
-		s = temp_que.get()  # the resulting (samples,thread_time)
-		temp_thread.join()
-		# s = queue.get()
-		total_n = s[0]
-		print("2", total_n, max_Samp)
-		sample_time_lst.append((total_n, max_Samp))
-		ret = classic_gen_time_Sample2(max_Samp - 1, sample_time_lst, queue)
+def make_sample(f_adj, queue):
+	# print("start making sample", max_samp)
+	try:
+		sampling = sample.sample(f_adj, 8, 1, threshold=False)
+		samp_graph = sample.to_subgraphs(sampling, graph)
+		ret = {"subgraph": samp_graph,
+		       "graph": adj}
 		queue.put(ret)
-		return ret
+		# print("exiting make_sample")
+		return
+	except RuntimeWarning:
+		print("ERROR RESAMPLE")
+		make_sample(f_adj, queue)
 
 
-def process_thread_1():
-	global total_t1
-	global classic_time_sample_data1
+
+def process_sample(num):
+	print(num)
+	temp_queue = Queue()
 	# Use thread to speed up processing (multithreading)
-	classic_time_sample_data1 = queue1.get()
-	# thread1.join()
-	tf = time.time()
-	total_t1 = tf - t0
-	return
-
-
-def process_thread_2():
-	global total_t2
-	global classic_time_sample_data2
-	# Use thread to speed up processing (multithreading)
-	classic_time_sample_data2 = queue2.get()
-	# thread2.join()
-	tf = time.time()
-	total_t2 = tf - t0
-	return
-
-
-# Use thread to speed up processing (multithreading)
-# thread1 = threading.Thread(None, target=classic_gen_time_Sample1,
-#                            name="1",
-#                            args=[5, queue1],
-#                            daemon=True, )
-
-
-# Use thread to speed up processing (multithreading)
-# thread2 = threading.Thread(None, target=classic_gen_time_Sample2,
-#                            name="2",
-#                            args=[5, [], queue2],
-#                            daemon=True, )
-# queue1 = _Queue.Queue(0)
-# queue2 = _Queue.Queue(0)
+	make_sample(adj, temp_queue)
+	data_node = temp_queue.get()  # the resulting (samples,thread_time)
+	if queue1.empty():
+		data_lst = [data_node]
+		length = len(data_lst)
+		# print("EMPTY list now ", length, " long")
+		queue1.put(data_lst)
+	else:
+		data_lst = queue1.get()
+		data_lst.append(data_node)
+		length = len(data_lst)
+		# print("list now ", length, " long")
+		queue1.put(data_lst)
 
 
 if __name__ == '__main__':
 	mp.set_start_method('spawn')
-	start_sampling = threading.Event()
-	queue2 = Queue()
+	adj = nx.to_numpy_array(read_yaml('union_graph.yaml'))
+	graph = nx.Graph(adj)
+	warnings.filterwarnings('error')
+	
+	
+	def foldl(func, acc, xs):
+		return functools.reduce(func, xs, acc)
+	
+	
 	queue1 = Queue()
-	maxSample = Value('d', 2.0)
+	maxSample = 3
+	# p_max = Process(target=process_sample, args=(queue1,))
+	total_t1 = time.time()
+	with Pool(processes=maxSample) as pool:
+		pool.map(process_sample, range(maxSample))
+	save = queue1.get()
+	tf = time.time()
+	total_time = tf - total_t1
 	
-	p1 = Process(target=process_thread_1, name="p1", args=(maxSample,))
-	# thread1 = threading.Thread(None, target=classic_gen_time_Sample1,
-	#                            name="1",
-	#                            args=[maxSample, queue1],
-	#                            daemon=True, )
-	p2 = Process(target=process_thread_2, name="p2", args=(maxSample,))
-	# thread2 = threading.Thread(None, target=classic_gen_time_Sample2,
-	#                            name="2",
-	#                            args=[maxSample, [], queue2],
-	#                            daemon=True, )
-	# pool = Pool(1)
-	# p1 = functools.partial(process_thread_1, )
-	# p2 = functools.partial(process_thread_2, )
+	# Debug
+	save_length = len(save)
+	rand_int = random.randrange(0, (save_length - 1), )
+	rand_node = save[0]
+	print("FINAL LENGTH ", save_length)
+	print(rand_node)
+	print("total time with thread ", total_time)
 	
-	print("running")
-	
-	
-	# thread1 is parallel to with thread2
-	
-	def runInParallel(*proc):
-		for p in proc:
-			p.start()
-			p.join()
-		return
-	
-	
-	# thread1.start()
-	# thread1.join()
-	
-	# thread2.start()
-	# thread1.join()
-	
-	pool = Pool()
-	parallel_run = pool.imap(runInParallel, [p1, p2])
-	pool.close()
-	pool.join()
-	
+	filename = 'SAVE-DATA1.pkl'
+	print("saving to ", filename)
+	outfile = open(filename, 'wb')
+	pickle.dump(save, outfile)
+	outfile.close()
 	print("done with parallel")
 	print("data loaded")
 
-# def runInParallel(*funcs):
-# 	proc = []
-# 	for fn in funcs:
-# 		p = Process(target=fn[0], args=fn[1])
-# 		p.start()
-# 		proc.append(p)
-# 	for p in proc:
-# 		p.join()
-# dill.dump_session("sample_pregen_dat.out")
-t0 = time.time()
+
+
+
+# print("starting NON THREAD")
+	# ts = time.time()
+	#
+	#
+	# def try_samp():
+	# 	try:
+	# 		sample.sample(adj, 8, maxSample, threshold=False)
+	# 	except RuntimeWarning:
+	# 		print("ERROR RESAMPLE")
+	# 		try_samp()
+	#
+	#
+	# try_samp()
+	# tfin = time.time()
+	# total_ts = tfin - ts
+	# print("total time without thread ", total_ts)
+	
+	# main_thread = threading.Thread(None, target=classic_gen_time_sample1,
+	#                                name="1",
+	#                                args=[maxSample, queue1],
+	#                                daemon=True, )
+	# print("running THREADED")
+	# total_t1 = time.time()
+	# main_thread.start()
+	# main_thread.join()
+	# save = queue1.get()
+	# tf = time.time()
+	# total_time = tf - total_t1
+	# # Debug
+	# save_length = len(save)
+	# rand_int = random.randrange(0, (save_length - 1), )
+	# rand_node = save[0]
+	# print("SAVE LENGTH ", save_length)
+	# print("total time with thread ", total_time)
+	#
+	# filename = 'SAVE-DATA1.pkl'
+	# print("saving to ", filename)
+	# outfile = open(filename, 'wb')
+	# pickle.dump(save, outfile)
+	# outfile.close()
+	# print("done with parallel")
+	# print("data loaded")
 
 # dill.dump_session("sample_pregen_dat.pkl")
 # runInParallel (process_thread_1, (5),
@@ -243,6 +174,42 @@ t0 = time.time()
 
 # OLD CODE:
 # ___________________________________________________________________________
+
+
+# def classic_gen_time_sample1(max_samp, queue):
+# 	def thread_samples(mSamp):
+# 		print(str(mSamp))
+# 		temp_queue = Queue()
+# 		# Use thread to speed up processing (multithreading)
+# 		temp_thread = threading.Thread(None, target=make_sample,
+# 		                               name=("1: " + str(mSamp)),
+# 		                               args=[adj, temp_queue],
+# 		                               daemon=True, )
+# 		temp_thread.start()
+# 		temp_thread.join()
+# 		data_node = temp_queue.get()  # the resulting (samples,thread_time)
+# 		if mSamp > 1:
+# 			thread_samples(mSamp - 1)
+# 		else:
+# 			if queue.empty():
+# 				data_lst = [data_node]
+# 				length = len(data_lst)
+# 				print("EMPTY list now ", length, " long")
+# 				queue.put(data_lst)
+# 			else:
+# 				data_lst = queue.get()
+# 				data_lst.append(data_node)
+# 				length = len(data_lst)
+# 				print("list now ", length, " long")
+# 				queue.put(data_lst)
+#
+# 	thread_samples(max_samp)
+# 	ret = queue.get()
+# 	# print("FINAL LIST IS NOW ", len(ret), "LONG")
+# 	queue.put(ret)
+# 	return ret
+
+
 # from strawberryfields.apps import data, sample, subgraph, plot
 # import plotly
 # import networkx as nx

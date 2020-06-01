@@ -19,7 +19,22 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="af12038f-0be3-4782-b1fe-73c5384bf9ad" name="Default Changelist" comment="" />
+    <list default="true" id="af12038f-0be3-4782-b1fe-73c5384bf9ad" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/project/LOAD_graph_samples.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/project/test.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$" beforeDir="false" afterPath="$PROJECT_DIR$" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/GBS_Subgraph_Simulation.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/GBS_Subgraph_Simulation.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/.idea/bigsad_gbs_subgraph.iml" beforeDir="false" afterPath="$PROJECT_DIR$/project/.idea/bigsad_gbs_subgraph.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/project/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/project/.idea/vcs.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/DenseSubgraph_scratch.py" beforeDir="false" afterPath="$PROJECT_DIR$/project/DenseSubgraph_scratch.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/sample.py" beforeDir="false" afterPath="$PROJECT_DIR$/project/sample.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/sample_noThread.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/sample_pregen_dat.pkl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/sample_thread.py" beforeDir="false" afterPath="$PROJECT_DIR$/project/sample_thread.py" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -28,6 +43,7 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
+        <option value="Jupyter Notebook" />
         <option value="Python Script" />
       </list>
     </option>
@@ -43,6 +59,7 @@
       </set>
     </option>
   </component>
+  <component name="JupyterTrust" id="2d0d5f1f-39f3-40c6-be54-8d975c17ba3d" />
   <component name="ProjectId" id="1ceZILJ1T0qek6gNIaFJZu7Rlsn" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectViewState">
@@ -54,12 +71,88 @@
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="settings.editor.selected.configurable" value="project.propVCSSupport.Mappings" />
+    <property name="run.code.analysis.last.selected.profile" value="pProject Default" />
+    <property name="settings.editor.selected.configurable" value="editor.preferences.fonts.default" />
   </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\Users\Smol Chonk\Box Sync\!Documents\Code\Python\McMahonLabs_Notebook\GBS_Subgraph_Simulation\repo_refs" />
     </key>
+  </component>
+  <component name="RunManager" selected="Python.LOAD_graph_samples">
+    <configuration name="LOAD_graph_samples" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="GBS_Subgraph_Simulation" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/project" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/project/LOAD_graph_samples.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="sample" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="GBS_Subgraph_Simulation" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/project" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/project/sample.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="test" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="GBS_Subgraph_Simulation" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/project" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/project/test.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Python.LOAD_graph_samples" />
+        <item itemvalue="Python.sample" />
+        <item itemvalue="Python.test" />
+      </list>
+    </recent_temporary>
   </component>
   <component name="SvnConfiguration">
     <configuration />
@@ -76,6 +169,17 @@
       <workItem from="1590891623668" duration="451000" />
       <workItem from="1590892110442" duration="72000" />
       <workItem from="1590892198883" duration="1110000" />
+      <workItem from="1590894577736" duration="55000" />
+      <workItem from="1590896678202" duration="1352000" />
+      <workItem from="1590898270918" duration="4342000" />
+      <workItem from="1590902625472" duration="3605000" />
+      <workItem from="1590906247978" duration="11651000" />
+      <workItem from="1590983839895" duration="6532000" />
+      <workItem from="1590990387216" duration="639000" />
+      <workItem from="1590991038622" duration="1810000" />
+      <workItem from="1590992861364" duration="416000" />
+      <workItem from="1590993287639" duration="283000" />
+      <workItem from="1590993596233" duration="2536000" />
     </task>
     <task id="LOCAL-00001" summary="h">
       <created>1590892361239</created>
@@ -133,6 +237,7 @@
         </entry>
       </map>
     </option>
+    <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
     <ignored-roots>
@@ -145,18 +250,78 @@
     <option name="LAST_COMMIT_MESSAGE" value="add" />
   </component>
   <component name="WindowStateProjectService">
+    <state x="1799" y="602" key="#Custom_Plugin_Repositories" timestamp="1590898216168">
+      <screen x="0" y="0" width="2560" height="1400" />
+    </state>
+    <state x="1799" y="602" key="#Custom_Plugin_Repositories/0.0.2560.1400@0.0.2560.1400" timestamp="1590898216168" />
     <state x="1807" y="590" key="#Notifications" timestamp="1590890973172">
       <screen x="0" y="0" width="2560" height="1400" />
     </state>
     <state x="1807" y="590" key="#Notifications/0.0.2560.1400@0.0.2560.1400" timestamp="1590890973172" />
+    <state x="1512" y="344" key="#Plugins" timestamp="1590903014578">
+      <screen x="0" y="0" width="2560" height="1400" />
+    </state>
+    <state x="1512" y="344" key="#Plugins/0.0.2560.1400@0.0.2560.1400" timestamp="1590903014578" />
+    <state x="1374" y="358" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1590898433587">
+      <screen x="0" y="0" width="2560" height="1400" />
+    </state>
+    <state x="1374" y="358" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.2560.1400@0.0.2560.1400" timestamp="1590898433587" />
+    <state x="1663" y="535" key="ANALYSIS_DLG_com.intellij.analysis.BaseAnalysisAction$1" timestamp="1590906218703">
+      <screen x="0" y="0" width="2560" height="1400" />
+    </state>
+    <state x="1663" y="535" key="ANALYSIS_DLG_com.intellij.analysis.BaseAnalysisAction$1/0.0.2560.1400@0.0.2560.1400" timestamp="1590906218703" />
     <state x="1453" y="181" key="CommitChangelistDialog2" timestamp="1590893477789">
       <screen x="0" y="0" width="2560" height="1400" />
     </state>
     <state x="1453" y="181" key="CommitChangelistDialog2/0.0.2560.1400@0.0.2560.1400" timestamp="1590893477789" />
-    <state x="1421" y="348" key="SettingsEditor" timestamp="1590892384305">
+    <state x="1699" y="455" key="FileChooserDialogImpl" timestamp="1590991794024">
       <screen x="0" y="0" width="2560" height="1400" />
     </state>
-    <state x="1421" y="348" key="SettingsEditor/0.0.2560.1400@0.0.2560.1400" timestamp="1590892384305" />
+    <state x="1699" y="455" key="FileChooserDialogImpl/0.0.2560.1400@0.0.2560.1400" timestamp="1590991794024" />
+    <state width="821" height="293" key="GridCell.Tab.0.bottom" timestamp="1590996072910">
+      <screen x="0" y="0" width="2560" height="1400" />
+    </state>
+    <state width="821" height="293" key="GridCell.Tab.0.bottom/0.0.2560.1400@0.0.2560.1400" timestamp="1590996072910" />
+    <state width="821" height="293" key="GridCell.Tab.0.center" timestamp="1590996072910">
+      <screen x="0" y="0" width="2560" height="1400" />
+    </state>
+    <state width="821" height="293" key="GridCell.Tab.0.center/0.0.2560.1400@0.0.2560.1400" timestamp="1590996072910" />
+    <state width="821" height="293" key="GridCell.Tab.0.left" timestamp="1590996072910">
+      <screen x="0" y="0" width="2560" height="1400" />
+    </state>
+    <state width="821" height="293" key="GridCell.Tab.0.left/0.0.2560.1400@0.0.2560.1400" timestamp="1590996072910" />
+    <state width="821" height="293" key="GridCell.Tab.0.right" timestamp="1590996072910">
+      <screen x="0" y="0" width="2560" height="1400" />
+    </state>
+    <state width="821" height="293" key="GridCell.Tab.0.right/0.0.2560.1400@0.0.2560.1400" timestamp="1590996072910" />
+    <state width="1234" height="480" key="GridCell.Tab.1.bottom" timestamp="1590906239202">
+      <screen x="0" y="0" width="2560" height="1400" />
+    </state>
+    <state width="1234" height="480" key="GridCell.Tab.1.bottom/0.0.2560.1400@0.0.2560.1400" timestamp="1590906239202" />
+    <state width="1234" height="480" key="GridCell.Tab.1.center" timestamp="1590906239202">
+      <screen x="0" y="0" width="2560" height="1400" />
+    </state>
+    <state width="1234" height="480" key="GridCell.Tab.1.center/0.0.2560.1400@0.0.2560.1400" timestamp="1590906239202" />
+    <state width="1234" height="480" key="GridCell.Tab.1.left" timestamp="1590906239202">
+      <screen x="0" y="0" width="2560" height="1400" />
+    </state>
+    <state width="1234" height="480" key="GridCell.Tab.1.left/0.0.2560.1400@0.0.2560.1400" timestamp="1590906239202" />
+    <state width="1234" height="480" key="GridCell.Tab.1.right" timestamp="1590906239202">
+      <screen x="0" y="0" width="2560" height="1400" />
+    </state>
+    <state width="1234" height="480" key="GridCell.Tab.1.right/0.0.2560.1400@0.0.2560.1400" timestamp="1590906239202" />
+    <state x="1612" y="337" key="RollbackChangesDialog" timestamp="1590903021970">
+      <screen x="0" y="0" width="2560" height="1400" />
+    </state>
+    <state x="1612" y="337" key="RollbackChangesDialog/0.0.2560.1400@0.0.2560.1400" timestamp="1590903021970" />
+    <state x="1421" y="348" key="SettingsEditor" timestamp="1590903207672">
+      <screen x="0" y="0" width="2560" height="1400" />
+    </state>
+    <state x="1421" y="348" key="SettingsEditor/0.0.2560.1400@0.0.2560.1400" timestamp="1590903207672" />
+    <state x="1481" y="301" key="com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser" timestamp="1590995668031">
+      <screen x="0" y="0" width="2560" height="1400" />
+    </state>
+    <state x="1481" y="301" key="com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser/0.0.2560.1400@0.0.2560.1400" timestamp="1590995668031" />
     <state x="1727" y="613" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1590893508567">
       <screen x="0" y="0" width="2560" height="1400" />
     </state>
@@ -165,9 +330,25 @@
       <screen x="0" y="0" width="2560" height="1400" />
     </state>
     <state x="1628" y="442" width="583" height="624" key="find.popup/0.0.2560.1400@0.0.2560.1400" timestamp="1590891593721" />
-    <state x="1583" y="400" key="search.everywhere.popup" timestamp="1590891549623">
+    <state x="1583" y="400" width="672" height="678" key="search.everywhere.popup" timestamp="1590995999107">
       <screen x="0" y="0" width="2560" height="1400" />
     </state>
-    <state x="1583" y="400" key="search.everywhere.popup/0.0.2560.1400@0.0.2560.1400" timestamp="1590891549623" />
+    <state x="1583" y="400" width="672" height="678" key="search.everywhere.popup/0.0.2560.1400@0.0.2560.1400" timestamp="1590995999107" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/project/LOAD_graph_samples.py</url>
+          <line>28</line>
+          <option name="timeStamp" value="1" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
+  </component>
+  <component name="com.intellij.coverage.CoverageDataManagerImpl">
+    <SUITE FILE_PATH="coverage/GBS_Subgraph_Simulation$test.coverage" NAME="test Coverage Results" MODIFIED="1590992550076" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/project" />
+    <SUITE FILE_PATH="coverage/GBS_Subgraph_Simulation$sample.coverage" NAME="sample Coverage Results" MODIFIED="1590996065227" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/project" />
+    <SUITE FILE_PATH="coverage/GBS_Subgraph_Simulation$LOAD_graph_samples.coverage" NAME="LOAD_graph_samples Coverage Results" MODIFIED="1590996072902" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/project" />
   </component>
 </project>

@@ -1,0 +1,8 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Makefile" type="MAKEFILE_TARGET_RUN_CONFIGURATION" factoryName="Makefile" editBeforeRun="true">
+    <makefile filename="" target="sample" workingDirectory="C:\Users\Smol Chonk\Box Sync\!Documents\Code\Python\McMahonLabs_Notebook\GBS-Subgraph-Simulation\project" arguments="">
+      <envs />
+    </makefile>
+    <method v="2" />
+  </configuration>
+</component>

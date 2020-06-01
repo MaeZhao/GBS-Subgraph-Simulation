@@ -12,6 +12,7 @@ from networkx.generators.random_graphs import erdos_renyi_graph as pGraph
 from networkx.readwrite.nx_yaml import write_yaml
 
 
+
 # def initialize() -> bool:
 #     """
 #     [initialize()] determines whether or not process should be drawn during
