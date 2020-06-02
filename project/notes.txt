@@ -1,0 +1,3 @@
+WSL location:
+cd /mnt/c/Users/Smol\ Chonk/Box\
+Sync/\!Documents/Code/Python/McMahonLabs_Notebook/GBS-Subgraph-Simulation/project

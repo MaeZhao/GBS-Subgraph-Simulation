@@ -1,45 +1,47 @@
-# In this code I will demonstrate the tedious nature of generating your own
-# samples
+# This code is used to generate samples of a graph
 
+import multiprocessing as mp
 import pickle
 import time
 import warnings
-import _thread as Thread
-from multiprocessing import Queue, Process, Pool
-import random
-import functools
-import operator
-from strawberryfields.apps import data, sample, subgraph, plot
+from multiprocessing import Queue, Process
 
-# from multiprocessing_on_dill.queues import Queue
-# from multiprocessing_on_dill.pool import Pool
-# from multiprocessing_on_dill.managers import Value
-# from multiprocessing_on_dill.context import BaseContext
-import dill
 import networkx as nx
-import numpy as np
-import multiprocessing as mp
-import threading as threading
 from networkx.readwrite.nx_yaml import read_yaml
 from strawberryfields.apps import sample
 
-
-def make_sample(f_adj, queue):
-	# graph = nx.Graph(f_adj)
-	try:
-		sampling = sample.sample(f_adj, 8, 5, threshold=True)
-		if not sampling:
-			make_sample(f_adj, queue)
+# Makes a sample of a [adj_mat]--if error occurs simply resamples. The size of
+# sample is determined by [cluster_size]
+def make_sample(adj_mat, queue, cluster_size):
+	with warnings.catch_warnings():
+		warnings.simplefilter("error")
+		try:
+			sampling = sample.sample(adj_mat, 8, cluster_size, threshold=True)
+			if not sampling:
+				make_sample(adj_mat, queue)
+				return
+			else:
+				queue.put(sampling)
+				return
+		except RuntimeWarning:
+			print("ERROR RESAMPLE")
+			make_sample(adj_mat, queue)
 			return
-		else:
-			queue.put(sampling)
-			return
-	except RuntimeWarning:
-		print("ERROR RESAMPLE")
-		make_sample(f_adj, queue)
-		return
 
 
+# Used for pool sampling--needed to create a temporary queue used for
+# calling [make_sample()]
+def pool_make_sample(adj, clust_size):
+	# print("Sampling cluster:  ", num)
+	temp_queue = Queue()
+	make_sample(adj, temp_queue, clust_size)
+	# print("Done processing cluster: ", num)
+	data_nodes = temp_queue.get()
+	return data_nodes
+
+
+# Removes empty lists from a list of lists [lsts] (i.e. our list of subgraph
+# samples)
 def remove_empty(lst):
 	try:
 		ret = lst.remove([])
@@ -48,103 +50,134 @@ def remove_empty(lst):
 		return lst
 
 
-def process_sample(adj, num, temp_queue):
-	print("Starting to process sample  ", num)
-	# Use thread to speed up processing (multithreading)
-	make_sample(adj, temp_queue)
-	print("sample ", num, " made")
-	# data_nodes = temp_queue.get()  # the resulting (samples,thread_time)
-	# temp_queue.put(data_nodes)
-	# # if queue.empty():
-	# data_lst = data_nodes
-	# length = len(data_lst)
-	# print("EMPTY list now ", length, " long")
-	# queue.put(data_lst)
-	return
+# USING MULTIPROCESSING (USE INSTEAD OF POOLING)--PICK EITHER OR METHODS
+# TO COMPUTE SAMPLES (pick based on time)
+def multiproc_sub_samp(graph, samp_cluster, clust_size):
+	save_lst = manager.list()
+	tm_i = time.time()
+	jobs = []
+	for i in range(samp_cluster):
+		queue2 = Queue()
+		# print("Initializing process", (i + 1), " of ", samp_cluster)
+		# print("    Queue ", (i + 1), " empty: ", queue2.empty())
+		p = Process(target=make_sample, name=str(i + 1),
+		            args=(adjacency_graph, queue2, clust_size,))
+		jobs.append(p)
+		p.start()
+		p.join()
+		# print("    Queue ", (i + 1), " empty: ", queue2.empty())
+		v = queue2.get()
+		v = sample.postselect(v, 16, 30)
+		save_lst.extend(v)
+	while len(jobs) > 0:
+		# print("...", mp.active_children())
+		jobs = [job for job in jobs if job.is_alive()]
+		time.sleep(1)
+	save_lst = sample.to_subgraphs(save_lst, graph)
+	# print("FINAL processing MATRIX: ", save_lst)
+	multiprocess_time = time.time() - tm_i
+	save_lst = remove_empty(save_lst)
+	return save_lst, multiprocess_time
 
 
-def process_sample_pool(adj, num):
-	print("Starting to process sample  ", num)
-	temp_queue = Queue()
-	# Use thread to speed up processing (multithreading)
-	make_sample(adj, temp_queue)
-	print("sample ", num, " made")
-	data_nodes = temp_queue.get()  # the resulting (samples,thread_time)
-	# temp_queue.put(data_nodes)
-	# # if queue.empty():
-	# data_lst = data_nodes
-	# length = len(data_lst)
-	# print("EMPTY list now ", length, " long")
-	# queue.put(data_lst)
-	return data_nodes
+# POOLING TECHNIQUE (USE INSTEAD OF MULTIPROCESSING)--PICK EITHER OR METHODS
+# TO COMPUTE SAMPLES (pick based on time)
+def pool_sub_samp(graph, samp_cluster, clust_size):
+	save_lst = manager.list()
+	tp_i = time.time()
+	pool = mp.Pool()
+	
+	def compile_result(result):
+		save_lst.extend(result)
+	
+	for i in range(samp_cluster):
+		# t = mp.Value(i, 'i')
+		# print("starting pool ", (i + 1), " of ", samp_cluster)
+		pool.apply_async(pool_make_sample,
+		                 args=(adjacency_graph, clust_size),
+		                 callback=compile_result)
+	pool.close()
+	pool.join()
+	save_lst = sample.to_subgraphs(save_lst, graph)
+	pooling_time = time.time() - tp_i
+	# print("FINAL pool MATRIX: ", save_lst)
+	return save_lst, pooling_time
+
+
+def init_graph_sampling(adj_graph, max_samples=50, multi_target="multiprocess",
+                        sample_size=10):
+	if max_samples < sample_size:
+		raise ValueError("maxSample must be larger than sample_size")
+	
+	graph = nx.Graph(adj_graph)
+	num_clusters = int(max_samples / sample_size)
+	
+	if not (max_samples % sample_size == 0):
+		raise UserWarning("max_samples should be divisible by sample_size, "
+		                  "max_samples is set to " +
+		                  str(sample_size * sample_size) +
+		                  ", instead. Change sample_size size to "
+		                  "accommodate max_samples")
+	
+	if multi_target == "multiprocess":
+		print("MULTIPROCESSING ", max_samples, " SAMPLES IN", sample_size,
+		      "CLUSTERS")
+		ret_data = multiproc_sub_samp(graph, num_clusters, sample_size)
+		save_lst = ret_data[0]
+		elapsed_time = ret_data[1]
+	elif multi_target == "pool":
+		print("POOLING ", max_samples, " SAMPLES IN", sample_size,
+		      "CLUSTERS")
+		ret_data = pool_sub_samp(graph, num_clusters, sample_size)
+		save_lst = ret_data[0]
+		elapsed_time = ret_data[1]
+	else:
+		raise ValueError("multi_target is must be either 'multiprocess' or "
+		                 "'pool'")
+	return save_lst, graph, elapsed_time
 
 
 if __name__ == '__main__':
-	g_adj = nx.to_numpy_array(read_yaml('union_graph.yaml'))
-	
-	
-	def foldl(func, acc, xs):
-		return functools.reduce(func, xs, acc)
-	
-	
-	def compile_result(result):
-		global save_pool
-		save_pool.extend(result)
-	
-	
-	graph = nx.Graph(g_adj)
-	maxSample = 20
+	adjacency_graph = nx.to_numpy_array(read_yaml('union_graph.yaml'))
 	manager = mp.Manager()
+	maxSamp = 100
+	sampSize = 10
+	# SAMPLING ONLY DEPENDS ON CALLING init_graph_sampling()
+	# CAN CHOOSE TO POOL OR MULTIPROCESS LARGE SAMPLES
+	#   MULTIPROCESS EX:
+	sub_data_m = init_graph_sampling(adjacency_graph, max_samples=maxSamp,
+	                                 multi_target="multiprocess",
+	                                 sample_size=sampSize)
+	save_m = (sub_data_m[0], sub_data_m[1])  # (subgraph list * graph)
+	total_time_m = sub_data_m[2]
+	print("MULTIPROCESSING TIME: ", total_time_m)
 	
-	iter = int(maxSample / 5)
-	
-	# t_pool = time.time()
-	# pool = mp.Pool(mp.cpu_count())
-	# save_pool = manager.list()
-	# for i in range(iter):
-	# 	queue1 = Queue()
-	# 	# t = mp.Value(i, 'i')
-	# 	print("starting pool ", (i + 1), " of ", iter)
-	# 	print(queue1.empty())
-	# 	pool.apply_async(process_sample_pool, args=(g_adj, (i + 1),),
-	# 	                 callback=compile_result)
-	# pool.close()
-	# pool.join()
-	# save_pool = sample.to_subgraphs(save_pool, graph)
-	# time_pool = time.time() - t_pool
-	# print("FINAL pool MATRIX: ", save_pool)
-	
-	t_p = time.time()
-	save = manager.list()
-	for i in range(iter):
-		queue2 = Queue()
-		print(queue2.empty())
-		print("starting process ", (i + 1), " of ", iter)
-		p = Process(target=process_sample, args=(g_adj, (i + 1), queue2,))
-		p.start()
-		p.join()
-		v = queue2.get()
-		# v = sample.postselect(v, 3, 30)
-		print("left process ", (i + 1), "of", iter)
-		save.extend(v)
-	
-	print(queue2.empty())
-	save = sample.to_subgraphs(save, graph)
-	total_time_process = time.time() - t_p
-	print("FINAL MATRIX LENGTH: ", save)
-	
-	# Debug
-	print("PROCESS TIME: ", total_time_process)
-	# print("POOL TIME: ", time_pool)
-	
-	filename = 'SAVE-DATA3.pkl'
+	filename = 'SAMPLE_DATA_' + str(maxSamp) + '_M.pkl'
 	print("saving to ", filename)
 	outfile = open(filename, 'wb')
-	pickle.dump(save, outfile)
+	pickle.dump(save_m, outfile)
+	outfile.close()
+	
+	#   POOL EX:
+	sub_data_p = init_graph_sampling(adjacency_graph, max_samples=maxSamp,
+	                                 multi_target="pool",
+	                                 sample_size=sampSize)
+	save_p = (sub_data_p[0], sub_data_m[1])  # (subgraph list * graph)
+	total_time_p = sub_data_p[2]
+	print("POOLING TIME: ", total_time_m)
+	
+	filename = 'SAMPLE_DATA_' + str(maxSamp) + '_P.pkl'
+	print("saving to ", filename)
+	outfile = open(filename, 'wb')
+	pickle.dump(save_p, outfile)
 	outfile.close()
 	print("done with parallel")
 	print("data loaded")
 
+# OLD CODE:
+# ___________________________________________________________________________
+# 	def foldl(func, acc, xs):
+# 		return functools.reduce(func, xs, acc)
 # print("starting NON THREAD")
 # ts = time.time()
 #	# save_length = len(save)
@@ -220,9 +253,6 @@ if __name__ == '__main__':
 
 # To load data:
 # dill.load_session("sample_pregen_dat.out")
-
-# OLD CODE:
-# ___________________________________________________________________________
 
 
 # def classic_gen_time_sample1(max_samp, queue):
