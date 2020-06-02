@@ -28,6 +28,8 @@ filename = 'SAVE-DATA.pkl'
 infile = open(filename, 'rb')
 subgraph_dict = pickle.load(infile)
 infile.close()
+
+
 # def try_samp(maxSample):
 # 		try:
 # 			sample.sample(adj, 8, maxSample, threshold=False)
@@ -37,6 +39,8 @@ infile.close()
 #
 #
 # subgraphs = try_samp(5)
+
+
 ind = 1
 for i in subgraph_dict:
 	subgraph = i["subgraph"]

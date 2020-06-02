@@ -18,77 +18,126 @@ from strawberryfields.apps import data, sample, subgraph, plot
 import dill
 import networkx as nx
 import numpy as np
-import multiprocess as mp
+import multiprocessing as mp
 import threading as threading
 from networkx.readwrite.nx_yaml import read_yaml
 from strawberryfields.apps import sample
 
 
 def make_sample(f_adj, queue):
-	# print("start making sample", max_samp)
+	# graph = nx.Graph(f_adj)
 	try:
-		sampling = sample.sample(f_adj, 8, 1, threshold=False)
-		samp_graph = sample.to_subgraphs(sampling, graph)
-		ret = {"subgraph": samp_graph,
-		       "graph": adj}
-		queue.put(ret)
-		# print("exiting make_sample")
-		return
+		sampling = sample.sample(f_adj, 8, 5, threshold=True)
+		if not sampling:
+			make_sample(f_adj, queue)
+			return
+		else:
+			queue.put(sampling)
+			return
 	except RuntimeWarning:
 		print("ERROR RESAMPLE")
 		make_sample(f_adj, queue)
+		return
 
 
+def remove_empty(lst):
+	try:
+		ret = lst.remove([])
+		return remove_empty(ret)
+	except ValueError:
+		return lst
 
-def process_sample(num):
-	print(num)
+
+def process_sample(adj, num, temp_queue):
+	print("Starting to process sample  ", num)
+	# Use thread to speed up processing (multithreading)
+	make_sample(adj, temp_queue)
+	print("sample ", num, " made")
+	# data_nodes = temp_queue.get()  # the resulting (samples,thread_time)
+	# temp_queue.put(data_nodes)
+	# # if queue.empty():
+	# data_lst = data_nodes
+	# length = len(data_lst)
+	# print("EMPTY list now ", length, " long")
+	# queue.put(data_lst)
+	return
+
+
+def process_sample_pool(adj, num):
+	print("Starting to process sample  ", num)
 	temp_queue = Queue()
 	# Use thread to speed up processing (multithreading)
 	make_sample(adj, temp_queue)
-	data_node = temp_queue.get()  # the resulting (samples,thread_time)
-	if queue1.empty():
-		data_lst = [data_node]
-		length = len(data_lst)
-		# print("EMPTY list now ", length, " long")
-		queue1.put(data_lst)
-	else:
-		data_lst = queue1.get()
-		data_lst.append(data_node)
-		length = len(data_lst)
-		# print("list now ", length, " long")
-		queue1.put(data_lst)
+	print("sample ", num, " made")
+	data_nodes = temp_queue.get()  # the resulting (samples,thread_time)
+	# temp_queue.put(data_nodes)
+	# # if queue.empty():
+	# data_lst = data_nodes
+	# length = len(data_lst)
+	# print("EMPTY list now ", length, " long")
+	# queue.put(data_lst)
+	return data_nodes
 
 
 if __name__ == '__main__':
-	mp.set_start_method('spawn')
-	adj = nx.to_numpy_array(read_yaml('union_graph.yaml'))
-	graph = nx.Graph(adj)
-	warnings.filterwarnings('error')
+	g_adj = nx.to_numpy_array(read_yaml('union_graph.yaml'))
 	
 	
 	def foldl(func, acc, xs):
 		return functools.reduce(func, xs, acc)
 	
 	
-	queue1 = Queue()
-	maxSample = 3
-	# p_max = Process(target=process_sample, args=(queue1,))
-	total_t1 = time.time()
-	with Pool(processes=maxSample) as pool:
-		pool.map(process_sample, range(maxSample))
-	save = queue1.get()
-	tf = time.time()
-	total_time = tf - total_t1
+	def compile_result(result):
+		global save_pool
+		save_pool.extend(result)
+	
+	
+	graph = nx.Graph(g_adj)
+	maxSample = 20
+	manager = mp.Manager()
+	
+	iter = int(maxSample / 5)
+	
+	# t_pool = time.time()
+	# pool = mp.Pool(mp.cpu_count())
+	# save_pool = manager.list()
+	# for i in range(iter):
+	# 	queue1 = Queue()
+	# 	# t = mp.Value(i, 'i')
+	# 	print("starting pool ", (i + 1), " of ", iter)
+	# 	print(queue1.empty())
+	# 	pool.apply_async(process_sample_pool, args=(g_adj, (i + 1),),
+	# 	                 callback=compile_result)
+	# pool.close()
+	# pool.join()
+	# save_pool = sample.to_subgraphs(save_pool, graph)
+	# time_pool = time.time() - t_pool
+	# print("FINAL pool MATRIX: ", save_pool)
+	
+	t_p = time.time()
+	save = manager.list()
+	for i in range(iter):
+		queue2 = Queue()
+		print(queue2.empty())
+		print("starting process ", (i + 1), " of ", iter)
+		p = Process(target=process_sample, args=(g_adj, (i + 1), queue2,))
+		p.start()
+		p.join()
+		v = queue2.get()
+		# v = sample.postselect(v, 3, 30)
+		print("left process ", (i + 1), "of", iter)
+		save.extend(v)
+	
+	print(queue2.empty())
+	save = sample.to_subgraphs(save, graph)
+	total_time_process = time.time() - t_p
+	print("FINAL MATRIX LENGTH: ", save)
 	
 	# Debug
-	save_length = len(save)
-	rand_int = random.randrange(0, (save_length - 1), )
-	rand_node = save[0]
-	print("FINAL LENGTH ", save_length)
-	print(rand_node)
-	print("total time with thread ", total_time)
+	print("PROCESS TIME: ", total_time_process)
+	# print("POOL TIME: ", time_pool)
 	
-	filename = 'SAVE-DATA1.pkl'
+	filename = 'SAVE-DATA3.pkl'
 	print("saving to ", filename)
 	outfile = open(filename, 'wb')
 	pickle.dump(save, outfile)
@@ -96,51 +145,51 @@ if __name__ == '__main__':
 	print("done with parallel")
 	print("data loaded")
 
-
-
-
 # print("starting NON THREAD")
-	# ts = time.time()
-	#
-	#
-	# def try_samp():
-	# 	try:
-	# 		sample.sample(adj, 8, maxSample, threshold=False)
-	# 	except RuntimeWarning:
-	# 		print("ERROR RESAMPLE")
-	# 		try_samp()
-	#
-	#
-	# try_samp()
-	# tfin = time.time()
-	# total_ts = tfin - ts
-	# print("total time without thread ", total_ts)
-	
-	# main_thread = threading.Thread(None, target=classic_gen_time_sample1,
-	#                                name="1",
-	#                                args=[maxSample, queue1],
-	#                                daemon=True, )
-	# print("running THREADED")
-	# total_t1 = time.time()
-	# main_thread.start()
-	# main_thread.join()
-	# save = queue1.get()
-	# tf = time.time()
-	# total_time = tf - total_t1
-	# # Debug
-	# save_length = len(save)
-	# rand_int = random.randrange(0, (save_length - 1), )
-	# rand_node = save[0]
-	# print("SAVE LENGTH ", save_length)
-	# print("total time with thread ", total_time)
-	#
-	# filename = 'SAVE-DATA1.pkl'
-	# print("saving to ", filename)
-	# outfile = open(filename, 'wb')
-	# pickle.dump(save, outfile)
-	# outfile.close()
-	# print("done with parallel")
-	# print("data loaded")
+# ts = time.time()
+#	# save_length = len(save)
+# rand_int = random.randrange(0, (save_length - 1), )
+# rand_node = save[0]
+# print("FINAL LENGTH ", save_length)
+# print("total time with thread ", total_time)
+# def try_samp():
+# 	try:
+# 		s = sample.sample(g_adj, 8, maxSample, threshold=False)
+# 		return s
+# 	except RuntimeWarning:
+# 		print("ERROR RESAMPLE")
+# 		try_samp()
+#
+# try_samp()
+# tfin = time.time()
+# total_ts = tfin - ts
+# print("total time without thread ", total_ts)
+
+# main_thread = threading.Thread(None, target=classic_gen_time_sample1,
+#                                name="1",
+#                                args=[maxSample, queue1],
+#                                daemon=True, )
+# print("running THREADED")
+# total_t1 = time.time()
+# main_thread.start()
+# main_thread.join()
+# save = queue1.get()
+# tf = time.time()
+# total_time = tf - total_t1
+# # Debug
+# save_length = len(save)
+# rand_int = random.randrange(0, (save_length - 1), )
+# rand_node = save[0]
+# print("SAVE LENGTH ", save_length)
+# print("total time with thread ", total_time)
+#
+# filename = 'SAVE-DATA1.pkl'
+# print("saving to ", filename)
+# outfile = open(filename, 'wb')
+# pickle.dump(save, outfile)
+# outfile.close()
+# print("done with parallel")
+# print("data loaded")
 
 # dill.dump_session("sample_pregen_dat.pkl")
 # runInParallel (process_thread_1, (5),
